@@ -1,0 +1,4 @@
+# General
+# ------------------------------------------------------------------------------
+DJANGO_READ_DOT_ENV_FILE=False
+DATABASE_URL=postgres://debug:debug@postgres:5432/django_db
