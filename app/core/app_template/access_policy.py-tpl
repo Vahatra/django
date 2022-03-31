@@ -1,0 +1,39 @@
+from rest_access_policy import AccessPolicy
+
+
+class {{ camel_case_app_name }}AccessPolicy(AccessPolicy):
+    statements = [
+        # create
+        {
+            "action": ["create"],
+            "principal": "authenticated",
+            "effect": "allow",
+        },
+        # read
+        {
+            "action": ["list"],
+            "principal": "authenticated",
+            "effect": "allow",
+        },
+        {
+            "action": ["retrieve"],
+            "principal": "authenticated",
+            "effect": "allow",
+        },
+        # uppdate
+        {
+            "action": ["update", "partial_update"],
+            "principal": "authenticated",
+            "effect": "allow",
+        },
+        # delete
+        {
+            "action": ["destroy"],
+            "principal": "authenticated",
+            "effect": "allow",
+        },
+    ]
+
+    @classmethod
+    def scope_queryset(cls, request, queryset):
+        return queryset

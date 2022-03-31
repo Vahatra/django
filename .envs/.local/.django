@@ -1,4 +1,25 @@
 # General
 # ------------------------------------------------------------------------------
 DJANGO_READ_DOT_ENV_FILE=False
-DATABASE_URL=postgres://debug:debug@postgres:5432/django_db
+USE_DOCKER=yes
+IPYTHONDIR=/app/.ipython
+
+# Database
+# ------------------------------------------------------------------------------
+DATABASE_URL=postgres://debug:debug@postgres:5432/database
+
+# Redis
+# ------------------------------------------------------------------------------
+REDIS_URL=redis://redis:6379/0
+
+# Celery
+# ------------------------------------------------------------------------------
+CELERY_BROKER_URL=redis://redis:6379/0
+
+# Flower
+CELERY_FLOWER_USER=debug
+CELERY_FLOWER_PASSWORD=debug
+
+# Frontend URL (no trailing slash)
+# ------------------------------------------------------------------------------
+APP_FRONTEND_URL=http://127.0.0.1:3000

@@ -1,0 +1,16 @@
+from dataclasses import dataclass
+
+from faker import Faker
+
+from app.utils.factory import SerializerFactory
+from app.{{ app_name }}.serializers import {{ camel_case_app_name }}Serializer
+
+fake = Faker()
+
+
+@dataclass
+class {{ camel_case_app_name }}SerializerFactory(SerializerFactory):
+    serializer_class = {{ camel_case_app_name }}Serializer
+
+    def __post_init__(self):
+        pass

@@ -1,0 +1,43 @@
+# General
+# ------------------------------------------------------------------------------
+DJANGO_READ_DOT_ENV_FILE=False
+DJANGO_SETTINGS_MODULE=config.settings.production
+DJANGO_SECRET_KEY=C14EeFHxMyKAOJ2zyZVrlfSk8isrqZcw3wn9hWnTiPKlKG71R7o77RmT5iceNG73
+DJANGO_ADMIN_URL=yIktT6PYUkl9C0BnGPCcyuyAVqTXQNdG/
+DJANGO_ALLOWED_HOSTS=.example.com
+
+# Database
+# ------------------------------------------------------------------------------
+DATABASE_URL=postgres://debug:debug@postgres:5432/database
+
+# Security
+# ------------------------------------------------------------------------------
+# TIP: better off using DNS, however, redirect is OK too
+DJANGO_SECURE_SSL_REDIRECT=False
+
+# Email
+# ------------------------------------------------------------------------------
+DJANGO_SERVER_EMAIL=
+
+MAILGUN_API_KEY=
+MAILGUN_DOMAIN=
+
+# Gunicorn
+# ------------------------------------------------------------------------------
+WEB_CONCURRENCY=4
+
+# Redis
+# ------------------------------------------------------------------------------
+REDIS_URL=redis://redis:6379/0
+
+# Celery
+# ------------------------------------------------------------------------------
+CELERY_BROKER_URL=redis://redis:6379/0
+
+# Flower
+CELERY_FLOWER_USER=debug
+CELERY_FLOWER_PASSWORD=debug
+
+# Frontend URL (no trailing slash)
+# ------------------------------------------------------------------------------
+APP_FRONTEND_URL=http://127.0.0.1:3000

@@ -1,0 +1,21 @@
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework import viewsets
+
+from .access_policy import {{ camel_case_app_name }}AccessPolicy
+from .models import {{ camel_case_app_name }}
+from .serializers import {{ camel_case_app_name }}Serializer
+
+
+class {{ camel_case_app_name }}ViewSet(viewsets.ModelViewSet):
+    serializer_class = {{ camel_case_app_name }}Serializer
+    queryset = {{ camel_case_app_name }}.objects.all()
+    permission_classes = [{{ camel_case_app_name }}AccessPolicy]
+    filter_backends = [DjangoFilterBackend]
+    filterset_fields = ["uuid"]
+
+    @property
+    def access_policy(self):
+        return self.permission_classes[0]
+
+    def get_queryset(self):
+        return self.access_policy.scope_queryset(self.request, {{ camel_case_app_name }}.objects.all())

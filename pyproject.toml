@@ -1,0 +1,96 @@
+[tool.black]
+line-length = 88
+exclude = '''
+/(
+    \.git
+  | \.mypy_cache
+  | \.tox
+  | venv
+  | \.venv
+  | _build
+  | buck-out
+  | build
+  | dist
+  | migrations
+  | static/CACHE
+)/
+'''
+
+[tool.isort]
+line_length = 88
+profile = "black"
+skip_glob = ".git,.mypy_cache,venv,.venv,_build,buck-out,build,dist,*/migrations/*,static/CACHE"
+
+[tool.poetry]
+name = "app"
+version = "0.1.0"
+description = "A ready to use django base project."
+authors = ["Vahatra Harilalanjatovo"]
+license = "MIT"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+argon2-cffi = "21.3.0"                                  # https://github.com/hynek/argon2_cffi
+celery = "5.2.3"                                        # pyup: < 6.0  # https://github.com/celery/celery
+gunicorn={ version = "20.1.0", optional = true }        # https://github.com/benoitc/gunicorn
+hiredis = "2.0.0"                                       # https://github.com/redis/hiredis-py
+psycopg2 = "2.9.3"                                      # https://github.com/psycopg/psycopg2
+python-slugify = "6.1.1"                                # https://github.com/un33k/python-slugify
+pytz = "2022.1"                                         # https://github.com/stub42/pytz
+redis = "4.2.0"                                         # https://github.com/redis/redis-py
+uvicorn = { version = "0.17.6", extras = ["standard"] } # https://github.com/encode/uvicorn
+whitenoise = "6.0.0"                                    # https://github.com/evansd/whitenoise
+
+# Django
+django = "3.2.12"                                                           # pyup: < 4.0  # https://www.djangoproject.com/
+django-anymail = { version = "8.5", extras = ["mailgun"], optional = true } # https://github.com/anymail/django-anymail
+django-celery-beat = "2.2.1"                                                # https://github.com/celery/django-celery-beat
+django-dynamic-preferences = "1.12.0"                                       # https://github.com/agateblue/django-dynamic-preferences
+django-environ = "0.8.1"                                                    # https://github.com/joke2k/django-environ
+django-filter = "21.1"                                                      # https://github.com/carltongibson/django-filter
+django-model-utils = "4.2.0"                                                # https://github.com/jazzband/django-model-utils
+django-redis = "5.2.0"                                                      # https://github.com/jazzband/django-redis
+
+# Django REST Framework
+djangorestframework = "3.13.1"          # https://github.com/encode/django-rest-framework
+djangorestframework-simplejwt = "5.1.0" # https://github.com/jazzband/djangorestframework-simplejwt
+django-cors-headers = "3.11.0"          # https://github.com/adamchainz/django-cors-headers
+drf-access-policy = "1.1.0"             # https://rsinger86.github.io/drf-access-policy/
+
+# API documentation
+drf-spectacular = "0.22.0" # https://github.com/tfranzel/drf-spectacular
+
+[tool.poetry.extras]
+production = ["gunicorn", "django-anymail"]
+
+[tool.poetry.dev-dependencies]
+ipdb = "0.13.9"                                         # https://github.com/gotcha/ipdb
+watchgod = "0.8.1"                                      # https://github.com/samuelcolvin/watchgod
+Werkzeug = { version = "2.0.3", extras = ["watchdog"] } # https://github.com/pallets/werkzeug
+
+# Testing
+# ------------------------------------------------------------------------------
+mypy = "0.942"                      # https://github.com/python/mypy
+django-debug-toolbar = "3.2.4"      # https://github.com/jazzband/django-debug-toolbar
+django-extensions = "3.1.5"         # https://github.com/django-extensions/django-extensions
+django-stubs = "1.9.0"              # https://github.com/typeddjango/django-stubs
+djangorestframework-stubs = "1.4.0" # https://github.com/typeddjango/djangorestframework-stubs
+factory-boy = "3.2.1"               # https://github.com/FactoryBoy/factory_boy
+pytest = "7.1.1"                    # https://github.com/pytest-dev/pytest
+pytest-django = "4.5.2"             # https://github.com/pytest-dev/pytest-django
+pytest-sugar = "0.9.4"              # https://github.com/Frozenball/pytest-sugar
+
+# Code quality
+# ------------------------------------------------------------------------------
+flake8 = "4.0.1"        # https://github.com/PyCQA/flake8
+flake8-isort = "4.1.1"  # https://github.com/gforcada/flake8-isort
+coverage = "6.3.2"      # https://github.com/nedbat/coveragepy
+black = "22.1.0"        # https://github.com/psf/black
+pylint-django = "2.5.3" # https://github.com/PyCQA/pylint-django
+pylint-celery = "0.3"   # https://github.com/PyCQA/pylint-celery
+pre-commit = "2.17.0"   # https://github.com/pre-commit/pre-commit
+
+[build-system]
+requires = ["poetry-core>=1.0.0"]
+build-backend = "poetry.core.masonry.api"

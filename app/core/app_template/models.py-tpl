@@ -1,0 +1,6 @@
+from ..core.models import CoreModel
+
+
+class {{ camel_case_app_name }}(CoreModel):
+    class Meta:
+        abstract = False

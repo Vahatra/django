@@ -1,0 +1,95 @@
+stages:
+  - lint
+  - test
+  - deploy
+
+variables:
+  # Tell docker CLI how to talk to Docker daemon; see
+  # https://docs.gitlab.com/ee/ci/docker/using_docker_build.html#use-docker-in-docker-executor
+  DOCKER_HOST: tcp://docker:2375/
+  # Use the overlayfs driver for improved performance:
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: ""
+
+
+
+flake8:
+  stage: lint
+  image: python:3.9-alpine
+  before_script:
+    - pip install -q flake8
+  script:
+    - cd ./backend
+    - flake8
+  only:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /\[ci flake8]/
+    refs:
+      - /^develop*.*$/
+
+pytest:
+  stage: test
+  image: docker/compose:latest
+  services:
+    - docker:dind
+  before_script:
+    - docker-compose -f local.yml build
+    # Ensure celerybeat does not crash due to non-existent tables
+    - docker-compose -f local.yml run --rm backend python manage.py migrate
+    - docker-compose -f local.yml up -d postgres redis
+  script:
+    - docker-compose -f local.yml run backend pytest
+  only:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /\[ci test]/
+    refs:
+      - /^develop*.*$/
+
+deploy:
+  stage: deploy
+  tags:
+    - deployment
+  before_script:
+    ##
+    ## Install ssh-agent if not already installed, it is required by Docker.
+    ## (change apt-get to yum if you use an RPM-based image)
+    ##
+    - 'command -v ssh-agent >/dev/null || ( apt-get update -y && apt-get install openssh-client -y )'
+
+    ##
+    ## Run ssh-agent (inside the build environment)
+    ##
+    - eval $(ssh-agent -s)
+
+    ##
+    ## Add the SSH key stored in SSH_PRIVATE_KEY variable to the agent store
+    ## We're using tr to fix line endings which makes ed25519 keys work
+    ## without extra base64 encoding.
+    ## https://gitlab.com/gitlab-examples/ssh-private-key/issues/1#note_48526556
+    ##
+    - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add -
+
+    ##
+    ## Create the SSH directory and give it the right permissions
+    ##
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+
+    ##
+    ## Use ssh-keyscan to scan the keys of your private server. Replace gitlab.com
+    ## with your own domain name. You can copy and repeat that command if you have
+    ## more than one server to connect to.
+    ##
+    # - touch ~/.ssh/known_hosts
+    # - ssh-keyscan -t rsa $SERVER_IP >> ~/.ssh/known_hosts
+    # - chmod 644 ~/.ssh/known_hosts
+  script:
+    # - ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP -p $PORT "cd /home/deployer/django/ && git pull https://$USERNAME:$DEPLOY_TOKEN@gitlab.url.django.git"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP -p $PORT "cd /home/deployer/django/ && git pull origin"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP -p $PORT "cd /home/deployer/django/ && docker-compose -f production.yml down"
+    - ssh -o StrictHostKeyChecking=no $SERVER_USER@$SERVER_IP -p $PORT "cd /home/deployer/django/ && docker-compose -f production.yml up -d --build"
+  only:
+    variables:
+      - $CI_COMMIT_MESSAGE =~ /\[ci deploy]/
+    refs:
+      - /^develop*.*$/

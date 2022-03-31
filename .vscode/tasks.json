@@ -1,0 +1,48 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        // local database
+        {
+            "label": "run local database",
+            "type": "shell",
+            "command": "docker-compose -f local.yml up -d redis postgres"
+        },
+        {
+            "label": "reset local databse",
+            "type": "shell",
+            "command": "docker-compose -f local.yml down -v && docker-compose -f local.yml up -d --build redis postgres"
+        },
+        // local docker-compose
+        {
+            "label": "run local",
+            "type": "shell",
+            "command": "docker-compose -f local.yml up -d"
+        },
+        {
+            "label": "reset local",
+            "type": "shell",
+            "command": "docker-compose -f local.yml down -v && docker-compose -f local.yml up -d --build"
+        },
+        // django
+        {
+            "label": "django runserver",
+            "type": "shell",
+            "command": "${command:python.interpreterPath}",
+            "args": [
+                "manage.py",
+                "runserver_plus"
+            ]
+        },
+        {
+            "label": "django migrate",
+            "type": "shell",
+            "command": "${command:python.interpreterPath}",
+            "args": [
+                "manage.py",
+                "migrate"
+            ]
+        }
+    ]
+}

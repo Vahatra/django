@@ -1,0 +1,66 @@
+version: '3'
+
+volumes:
+  production_postgres_data: {}
+  production_postgres_backups: {}
+  production_traefik: {}
+
+services:
+  django: &django
+    build:
+      context: .
+      dockerfile: ./compose/production/django/Dockerfile
+    image: production_django
+    platform: linux/x86_64
+    depends_on:
+      - postgres
+      - redis
+    env_file:
+      - ./.envs/.production/.django
+      - ./.envs/.production/.postgres
+    command: /start
+    restart: unless-stopped
+
+  postgres:
+    build:
+      context: .
+      dockerfile: ./compose/production/postgres/Dockerfile
+    image: production_postgres
+    volumes:
+      - production_postgres_data:/var/lib/postgresql/data:Z
+      - production_postgres_backups:/backups:z
+    env_file:
+      - ./.envs/.production/.postgres
+    restart: unless-stopped
+
+  traefik:
+    build:
+      context: .
+      dockerfile: ./compose/production/traefik/Dockerfile
+    image: production_traefik
+    depends_on:
+      - django
+    volumes:
+      - production_traefik:/etc/traefik/acme:z
+    ports:
+      - "80:80"
+      - "443:443"
+      - "5555:5555"
+      # - "8080:8080" -- dashboard
+    restart: unless-stopped
+
+  redis:
+    image: redis:6
+    restart: unless-stopped
+
+  celeryworker:
+    <<: *django
+    image: production_celeryworker
+    command: /start-celeryworker
+    restart: unless-stopped
+
+  celerybeat:
+    <<: *django
+    image: production_celerybeat
+    command: /start-celerybeat
+    restart: unless-stopped

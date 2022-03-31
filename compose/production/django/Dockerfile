@@ -1,40 +1,68 @@
+ARG PYTHON_VERSION=3.9-slim-bullseye
 
-FROM python:3.8-slim-buster
+# define an alias for the specfic python version used in this file.
+FROM python:${PYTHON_VERSION} as python
+
+ARG BUILD_ENVIRONMENT=production
+ARG APP_HOME=/app
 
 ENV PYTHONUNBUFFERED 1
+ENV PYTHONDONTWRITEBYTECODE 1
+ENV BUILD_ENV ${BUILD_ENVIRONMENT}
 
-RUN apt-get update \
+WORKDIR ${APP_HOME}
+
+# Install apt packages
+RUN apt-get update && apt-get install --no-install-recommends -y \
   # dependencies for building Python packages
-  && apt-get install -y build-essential \
+  build-essential \
   # psycopg2 dependencies
-  && apt-get install -y libpq-dev \
+  libpq-dev \
+  # poetry dependencies
+  curl \
   # Translations dependencies
-  && apt-get install -y gettext \
+  gettext \
   # cleaning up unused files
   && apt-get purge -y --auto-remove -o APT::AutoRemove::RecommendsImportant=false \
   && rm -rf /var/lib/apt/lists/*
 
+# Install Poetry
+RUN curl -sSL https://raw.githubusercontent.com/python-poetry/poetry/master/get-poetry.py | POETRY_HOME=/opt/poetry python && \
+  cd /usr/local/bin && \
+  ln -s /opt/poetry/bin/poetry && \
+  poetry config virtualenvs.create false
+
 RUN addgroup --system django \
-    && adduser --system --ingroup django django
+  && adduser --system --ingroup django django
 
-# Requirements are installed here to ensure they will be cached.
-COPY ./requirements /requirements
-RUN pip install --no-cache-dir -r /requirements/production.txt \
-    && rm -rf /requirements
+# Copy poetry.lock* in case it doesn't exist in the repo
+COPY ./pyproject.toml ./poetry.lock* ./
 
-COPY ./compose/production/django/entrypoint /entrypoint
+# no dev dependencies and specify extra argument -E production
+RUN bash -c "poetry install -E production --no-root --no-dev"
+
+COPY --chown=django:django ./compose/production/django/entrypoint /entrypoint
 RUN sed -i 's/\r$//g' /entrypoint
 RUN chmod +x /entrypoint
-RUN chown django /entrypoint
 
-COPY ./compose/production/django/start /start
+COPY --chown=django:django ./compose/production/django/start /start
 RUN sed -i 's/\r$//g' /start
 RUN chmod +x /start
-RUN chown django /start
-COPY --chown=django:django . /app
+
+COPY --chown=django:django ./compose/production/django/celery/worker/start /start-celeryworker
+RUN sed -i 's/\r$//g' /start-celeryworker
+RUN chmod +x /start-celeryworker
+
+COPY --chown=django:django ./compose/production/django/celery/beat/start /start-celerybeat
+RUN sed -i 's/\r$//g' /start-celerybeat
+RUN chmod +x /start-celerybeat
+
+# copy application code to WORKDIR
+COPY --chown=django:django . ${APP_HOME}
+
+# make django owner of the WORKDIR directory as well.
+RUN chown django:django ${APP_HOME}
 
 USER django
-
-WORKDIR /app
 
 ENTRYPOINT ["/entrypoint"]

@@ -1,48 +1,44 @@
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+from rest_framework_simplejwt.views import (
+    token_obtain_pair,
+    token_refresh,
+    token_verify,
+)
+
 from django.conf import settings
+from django.conf.urls.static import static
 from django.contrib import admin
+from django.contrib.staticfiles.urls import staticfiles_urlpatterns
 from django.urls import include, path
 
-API_PREFIX = "api/v0"
-
 urlpatterns = [
-    # Django Admin
+    # Django Admin, use {% url 'admin:index' %}
     path(settings.ADMIN_URL, admin.site.urls),
-]
-
-# API URLS
-api_urlpatterns = [
-    # JWT
-    path(f"{API_PREFIX}/", include("djoser.urls.jwt")),
-    # Social auth
-    path(f"{API_PREFIX}/", include("djoser.social.urls")),
-    # User management
-    path(f"{API_PREFIX}/", include("djoser.urls")),
-]
-
-urlpatterns += api_urlpatterns
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 
 if settings.DEBUG:
-    from rest_framework import permissions
+    # Static file serving when using Gunicorn + Uvicorn for local web socket development
+    urlpatterns += staticfiles_urlpatterns()
 
-    from drf_yasg import openapi
-    from drf_yasg.views import get_schema_view
+# API URLS
+urlpatterns += [
+    # API base url
+    path("", include("app.users.urls")),
+    # DRF simplejwt
+    path("jwt/create", token_obtain_pair, name="jwt-create"),
+    path("jwt/refresh", token_refresh, name="jwt-refresh"),
+    path("jwt/verify", token_verify, name="jwt-verify"),
+    # Swagger UI
+    path("api/schema/", SpectacularAPIView.as_view(), name="api-schema"),
+    path(
+        "api/docs/",
+        SpectacularSwaggerView.as_view(url_name="api-schema"),
+        name="api-docs",
+    ),
+]
 
-    api_schema_view = get_schema_view(
-        openapi.Info(title="API", description="API", default_version="v0"),
-        public=True,
-        permission_classes=(permissions.AllowAny,),
-        patterns=api_urlpatterns,
-    )
+if settings.DEBUG:
+    if "debug_toolbar" in settings.INSTALLED_APPS:
+        import debug_toolbar
 
-    swagger_urlpatterns = [
-        path(
-            r"swagger/",
-            api_schema_view.with_ui("swagger", cache_timeout=0),
-            name="swagger",
-        ),
-        path(
-            r"redoc/", api_schema_view.with_ui("redoc", cache_timeout=0), name="redoc",
-        ),
-    ]
-
-    urlpatterns += swagger_urlpatterns
+        urlpatterns = [path("__debug__/", include(debug_toolbar.urls))] + urlpatterns
