@@ -2,7 +2,7 @@ version: '3'
 
 volumes:
   app_local_postgres_data: {}
-  app_local_postgres_data_backups: {}
+  app_local_postgres_backups: {}
 
 services:
   django: &django
@@ -33,7 +33,7 @@ services:
     container_name: app_local_postgres
     volumes:
       - app_local_postgres_data:/var/lib/postgresql/data:Z
-      - app_local_postgres_data_backups:/backups:z
+      - app_local_postgres_backups:/backups:z
     env_file:
       - ./.envs/.local/.postgres
     ports:

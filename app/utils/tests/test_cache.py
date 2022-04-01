@@ -5,7 +5,7 @@ import time
 import pytest
 
 from app.users.models import User
-from app.users.tests.factories import UserFactory
+from app.users.tests.factories import UserSerializerFactory
 from app.utils.cache import cache_result_ttl
 from django.db.models import Model
 from django.utils.encoding import force_bytes
@@ -22,9 +22,9 @@ def a(user1: User, user2: User, user3: User):
 
 @pytest.mark.django_db
 def test_key():
-    user1 = UserFactory().create()
-    user2 = UserFactory().create()
-    user3 = UserFactory().create()
+    user1 = UserSerializerFactory().create()
+    user2 = UserSerializerFactory().create()
+    user3 = UserSerializerFactory().create()
     result = a.get_key(user1, user2, user3)
     expected = (
         "test"

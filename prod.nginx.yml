@@ -38,7 +38,7 @@ services:
     restart: unless-stopped
 
   nginx:
-    build: 
+    build:
       context: ./
       dockerfile: ./compose/production/nginx/Dockerfile
     image: production_nginx

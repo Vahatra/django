@@ -3,6 +3,7 @@ from typing import Any, Sequence
 
 from factory import Faker, post_generation
 from factory.django import DjangoModelFactory
+from faker import Faker as RealFaker
 
 from app.utils.factory import SerializerFactory
 from app.utils.utils import slugify
@@ -11,7 +12,7 @@ from django.contrib.auth import get_user_model
 from ..models import User
 from ..serializers import UserSerializer
 
-fake = Faker()
+fake = RealFaker()
 
 
 class UserFactory(DjangoModelFactory):

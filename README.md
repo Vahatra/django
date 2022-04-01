@@ -36,7 +36,7 @@ License: MIT
 
 ## The things
 
-### Create app 
+### Create app
 
 Create an app based on a **[custom template](app/core/app_template/)**.
 
@@ -48,7 +48,7 @@ A **[little class](app/utils/factory.py)** that can be inherited and used with a
 
 ```python
 @dataclass
-class SomeFactory(Factory):
+class SomeFactory(SerializerFactory):
     serializer_class = SomeSerializer
     an_attribute: str = None
     another_attribute: str = None
