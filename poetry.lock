@@ -1690,11 +1690,11 @@ python-versions = ">=3.7"
 
 [[package]]
 name = "werkzeug"
-version = "2.0.3"
+version = "2.1.0"
 description = "The comprehensive WSGI web application library."
 category = "dev"
 optional = false
-python-versions = ">=3.6"
+python-versions = ">=3.7"
 
 [package.dependencies]
 watchdog = {version = "*", optional = true, markers = "extra == \"watchdog\""}
@@ -1727,7 +1727,7 @@ production = ["gunicorn", "django-anymail"]
 [metadata]
 lock-version = "1.1"
 python-versions = "^3.9"
-content-hash = "aa74f97335bc6305119c5fd4b4a502c5b51c84ec343c1e27ef5ac2a0fd222236"
+content-hash = "dc443c2f8776e9d9d3ffe95769d55502d9e83ee8d61a66391662f5225339c847"
 
 [metadata.files]
 amqp = [
@@ -2709,8 +2709,8 @@ websockets = [
     {file = "websockets-10.2.tar.gz", hash = "sha256:8351c3c86b08156337b0e4ece0e3c5ec3e01fcd14e8950996832a23c99416098"},
 ]
 werkzeug = [
-    {file = "Werkzeug-2.0.3-py3-none-any.whl", hash = "sha256:1421ebfc7648a39a5c58c601b154165d05cf47a3cd0ccb70857cbdacf6c8f2b8"},
-    {file = "Werkzeug-2.0.3.tar.gz", hash = "sha256:b863f8ff057c522164b6067c9e28b041161b4be5ba4d0daceeaa50a163822d3c"},
+    {file = "Werkzeug-2.1.0-py3-none-any.whl", hash = "sha256:094ecfc981948f228b30ee09dbfe250e474823b69b9b1292658301b5894bbf08"},
+    {file = "Werkzeug-2.1.0.tar.gz", hash = "sha256:9b55466a3e99e13b1f0686a66117d39bda85a992166e0a79aedfcf3586328f7a"},
 ]
 whitenoise = [
     {file = "whitenoise-6.0.0-py3-none-any.whl", hash = "sha256:5a4aff543ee860fbe40d743e556adf92ccd41b7df45697cae074afdf657056b9"},
