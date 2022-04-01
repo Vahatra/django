@@ -38,7 +38,7 @@ hiredis = "2.0.0"                                       # https://github.com/red
 psycopg2 = "2.9.3"                                      # https://github.com/psycopg/psycopg2
 python-slugify = "6.1.1"                                # https://github.com/un33k/python-slugify
 pytz = "2022.1"                                         # https://github.com/stub42/pytz
-redis = "4.2.0"                                         # https://github.com/redis/redis-py
+redis = "4.2.1"                                         # https://github.com/redis/redis-py
 uvicorn = { version = "0.17.6", extras = ["standard"] } # https://github.com/encode/uvicorn
 whitenoise = "6.0.0"                                    # https://github.com/evansd/whitenoise
 
