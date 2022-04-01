@@ -29,7 +29,7 @@ License: MIT
 
 - **[local.yml](local.yml)** for local development.
 - **[prod.yml](prod.yml)** with `traefik`
-- Use **[traefik.nossl.yml](compose/production/traefik/traefik.nossl.yml)** as a file provider for [traefik's Dockerfile](compose/production/traefik/Dockerfile#L5) with the `dashboard` and no `ssl`.
+- Can use **[traefik.nossl.yml](compose/production/traefik/traefik.nossl.yml)** as a file provider for [traefik's Dockerfile](compose/production/traefik/Dockerfile#L5) to have the `dashboard` and no `ssl`.
 - **[prod.nginx.yml](prod.nginx.yml)** with `nginx`, no `ssl`.
 
 
@@ -69,6 +69,7 @@ def test_some():
     some: Some = some_factory.create()
     # update
     some: Some = some_factory.update(data={"an_attribute": "another_test"})
+    # get desirialized data (JSON)
     data = some_factory.get_data()
 ```
 
@@ -151,6 +152,9 @@ docker-compose -f local.yml up -d postgres
 # rename the environment file
 mv .env.example .env
 
+# migrations
+python manage.py migrate
+# run
 python manage.py runserver_plus
 ```
 
