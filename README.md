@@ -40,7 +40,7 @@ License: MIT
 
 Create an app based on a **[custom template](app/core/app_template/)**.
 
-    $ python manage.py startapp_api
+    $ python manage.py startapp_api my_app_name
 
 ### Factory
 
