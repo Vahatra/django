@@ -43,7 +43,7 @@ uvicorn = { version = "0.17.6", extras = ["standard"] } # https://github.com/enc
 whitenoise = "6.0.0"                                    # https://github.com/evansd/whitenoise
 
 # Django
-django = "3.2.13"                                                           # pyup: < 4.0  # https://www.djangoproject.com/
+django = "3.2.14"                                                           # pyup: < 4.0  # https://www.djangoproject.com/
 django-anymail = { version = "8.5", extras = ["mailgun"], optional = true } # https://github.com/anymail/django-anymail
 django-celery-beat = "2.2.1"                                                # https://github.com/celery/django-celery-beat
 django-dynamic-preferences = "1.12.0"                                       # https://github.com/agateblue/django-dynamic-preferences
