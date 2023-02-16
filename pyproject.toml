@@ -67,7 +67,7 @@ production = ["gunicorn", "django-anymail"]
 [tool.poetry.dev-dependencies]
 ipdb = "0.13.9"                                         # https://github.com/gotcha/ipdb
 watchgod = "0.8.1"                                      # https://github.com/samuelcolvin/watchgod
-Werkzeug = { version = "2.0.3", extras = ["watchdog"] } # https://github.com/pallets/werkzeug
+Werkzeug = { version = "2.2.3", extras = ["watchdog"] } # https://github.com/pallets/werkzeug
 
 # Testing
 # ------------------------------------------------------------------------------
